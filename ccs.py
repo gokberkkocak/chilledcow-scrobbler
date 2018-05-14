@@ -45,6 +45,9 @@ def get_video_url(youtube_link):
 def take_snapshot(stream):
     capture = cv2.VideoCapture(stream)
     success, image = capture.read()
+    if not success:
+        print("OpenCV can't read video stream.") 
+        sys.exit()
     image_file = 'img.jpg'
     cv2.imwrite(image_file, image)
     capture.release()
@@ -53,7 +56,8 @@ def take_snapshot(stream):
 
 def cut_image(image):
     img = Image.open(image)
-    area = (0, 0, 1000, 50)
+    width = img.size[0]
+    area = (0, 0, width, 50)
     cropped_img = img.crop(area)
     new_image = image.split(".")[0]+"_cropped.jpg"
     cropped_img.save(new_image)
@@ -92,7 +96,6 @@ def check_song_details(song_details):
         return artist, song
     else:
         return None, None
-
 
 def scrobble_to_lastfm(credentials, artist, song):
     lastfm_network = pylast.LastFMNetwork(api_key=credentials["LASTFM_API_KEY"], api_secret=credentials["LASTFM_SHARED_SECRET"], \
