@@ -11,7 +11,7 @@ import json
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: python ccs.py <credentials> <chilledcow_youtube_stream_link>")
+        print("Usage: python ccs.py <credentials.json> <chilledcow_youtube_stream_link>")
         sys.exit()
     credentials_file = sys.argv[1]
     with open(credentials_file, "r") as f:
