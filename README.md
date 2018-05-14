@@ -38,12 +38,12 @@ pylast.md5(password)
 
 - Grabs the youtube link and extracts the stream url.
 
-- OpenCV opens the stream and captures one single frame
+- OpenCV opens the stream and captures one single frame every 30 seconds
 ![Example image](images/img.jpg "Title")
-- Images get cropped
+- Image gets cropped
 ![Example cropped image](images/img_cropped.jpg "Title")
 - Remove the background
 ![Example processed image](images/img_cropped_processed.jpg "Title")
 - OCR on image
-- Send to Last.FM
+- Send to Last.FM (if it didn't send it already)
 
