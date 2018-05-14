@@ -94,7 +94,7 @@ def check_song_details(song_details):
 
 
 def scrobble_to_lastfm(credentials, artist, song):
-    lastfm_network = pylast.LastFMNetwork(api_key=credentials["LAST_API_KEY"], api_secret=credentials["LAST_SHARED_SECRET"], \
+    lastfm_network = pylast.LastFMNetwork(api_key=credentials["LASTFM_API_KEY"], api_secret=credentials["LASTFM_SHARED_SECRET"], \
                      username= credentials["username"], password_hash=credentials["password_hash"])
     timestamp = int(time.time())
     lastfm_network.scrobble(artist, song, timestamp)
