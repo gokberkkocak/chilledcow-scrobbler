@@ -24,9 +24,12 @@ def main():
         cropped_image_file = cut_image(image_file)
         processed_image_file = cv2_process(cropped_image_file)
         song_details = tesseract_ocr_read(processed_image_file)
-        flag, artist, song, prev_song_details = check_song_details(prev_song_details, song_details)
-        if flag:
-            scrobble_to_lastfm(credentials, artist, song)
+        diff_flag = diff_song_details(prev_song_details, song_details)
+        if diff_flag:
+            prev_song_details = song_details
+            artist, song = check_song_details(song_details)
+            if artist is not None:
+                scrobble_to_lastfm(credentials, artist, song)
         time.sleep(30)
         
 def get_video_url(youtube_link):
@@ -73,14 +76,22 @@ def tesseract_ocr_read(image):
     # print("Song details read by tesseract")
     return song_details
 
-def check_song_details(previous_song_details, song_details):
-    artist, song = song_details.split(" - ")
-    # print("Current song: {} - {}".format(artist, song))
+def diff_song_details(previous_song_details, song_details):
     seq = difflib.SequenceMatcher(a=previous_song_details.lower(), b=song_details.lower())
+    # print("Similarity ratio: {}".format(seq.ratio()))
     if seq.ratio() < 0.95:
-        return True, artist, song, song_details
+        return True
     else:
-        return False, None, None, previous_song_details
+        return False
+
+def check_song_details(song_details):
+    song_info = song_details.split(" - ")
+    if len(song_info) == 2:
+        artist, song = song_info
+        return artist, song
+    else:
+        return None, None
+
 
 def scrobble_to_lastfm(credentials, artist, song):
     lastfm_network = pylast.LastFMNetwork(api_key=credentials["LAST_API_KEY"], api_secret=credentials["LAST_SHARED_SECRET"], \
