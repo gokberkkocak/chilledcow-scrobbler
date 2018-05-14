@@ -7,6 +7,7 @@ LastFM scrobbler for chilledcow youtube stream
 ## Python Requirements
 - opencv
 - pafy
+- youtube-dl
 - numpy
 - pillow image
 - pytesseract
@@ -22,8 +23,8 @@ python ccs.py credentials.json stream_youtube_link
 - Credentials file must be JSON in this format;
 ```
 {
- "LAST_API_KEY" : "sample",
- "LAST_SHARED_SECRET" : "sample",
+ "LASTFM_API_KEY" : "sample",
+ "LASTFM_SHARED_SECRET" : "sample",
  "username" : "sample",
  "password_hash" : "sample" 
 }
