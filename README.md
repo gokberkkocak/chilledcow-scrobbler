@@ -42,7 +42,7 @@ pylast.md5(password)
 ![Example image](images/img.jpg "Title")
 - Images get cropped
 ![Example cropped image](images/img_cropped.jpg "Title")
-- It removes the background
+- Remove the background
 ![Example processed image](images/img_cropped_processed.jpg "Title")
 - OCR on image
 - Send to Last.FM
