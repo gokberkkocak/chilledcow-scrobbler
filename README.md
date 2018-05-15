@@ -16,7 +16,7 @@ LastFM scrobbler for chilledcow youtube stream
 ## Usage
 
 ```
-python ccs.py credentials.json youtube_video_link
+python ccs.py credentials_file_json chilledcow_youtube_video_link
 ```
 ## Credentials File
 - You need a LastFM API. You can apply from [here](https://www.last.fm/api/account/create).
@@ -38,7 +38,6 @@ pylast.md5(password)
 ## How does it work
 
 - Grabs the youtube link and extracts the stream url.
-
 - OpenCV opens the stream and captures one single frame every 30 seconds
 ![Example image](images/img.jpg "Example image")
 - Image gets cropped
