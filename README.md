@@ -16,7 +16,7 @@ LastFM scrobbler for chilledcow youtube stream
 ## Usage
 
 ```
-python ccs.py credentials.json stream_youtube_link
+python ccs.py credentials.json youtube_video_link
 ```
 ## Credentials File
 - You need a LastFM API. You can apply from [here](https://www.last.fm/api/account/create).

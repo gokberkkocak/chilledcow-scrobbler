@@ -12,7 +12,7 @@ import json
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: python ccs.py <credentials.json> <chilledcow_youtube_stream_link>")
+        print("Usage: python ccs.py <credentials_file_json> <chilledcow_youtube_video_link>")
         sys.exit()
     credentials_file = sys.argv[1]
     with open(credentials_file, "r") as f:
@@ -21,7 +21,7 @@ def main():
     stream = get_video_url(url)
     prev_song_details = ""
     lastfm_network = pylast.LastFMNetwork(api_key=credentials["LASTFM_API_KEY"], api_secret=credentials["LASTFM_SHARED_SECRET"], \
-                     username= credentials["username"], password_hash=credentials["password_hash"])
+                     username=credentials["username"], password_hash=credentials["password_hash"])
     while True:
         image_file = take_snapshot(stream)
         cropped_image_file = cut_image(image_file)
