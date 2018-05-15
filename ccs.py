@@ -85,8 +85,9 @@ def tesseract_ocr_read(image):
 
 def diff_song_details(previous_song_details, song_details):
     seq = difflib.SequenceMatcher(a=previous_song_details.lower(), b=song_details.lower())
-    # print("Similarity ratio: {}".format(seq.ratio()))
-    if seq.ratio() < 0.95:
+    similarity_score = seq.ratio()
+    # print("Similarity ratio: {}".format(similarity_score))
+    if similarity_score < 0.8:
         return True
     else:
         return False
