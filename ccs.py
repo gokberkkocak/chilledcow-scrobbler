@@ -50,7 +50,7 @@ def take_snapshot(stream):
     if not success:
         print("OpenCV can't read video stream.") 
         sys.exit()
-    image_file = 'img.jpg'
+    image_file = "img.jpg"
     cv2.imwrite(image_file, image)
     capture.release()
     # print("Snapshot taken")
