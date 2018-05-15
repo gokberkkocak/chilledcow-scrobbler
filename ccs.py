@@ -20,6 +20,8 @@ def main():
     url = sys.argv[2]
     stream = get_video_url(url)
     prev_song_details = ""
+    lastfm_network = pylast.LastFMNetwork(api_key=credentials["LASTFM_API_KEY"], api_secret=credentials["LASTFM_SHARED_SECRET"], \
+                     username= credentials["username"], password_hash=credentials["password_hash"])
     while True:
         image_file = take_snapshot(stream)
         cropped_image_file = cut_image(image_file)
@@ -30,7 +32,7 @@ def main():
             prev_song_details = song_details
             artist, song = check_song_details(song_details)
             if artist is not None:
-                scrobble_to_lastfm(credentials, artist, song)
+                scrobble_to_lastfm(lastfm_network, artist, song)
         time.sleep(30)
         
 def get_video_url(youtube_link):
@@ -97,9 +99,7 @@ def check_song_details(song_details):
     else:
         return None, None
 
-def scrobble_to_lastfm(credentials, artist, song):
-    lastfm_network = pylast.LastFMNetwork(api_key=credentials["LASTFM_API_KEY"], api_secret=credentials["LASTFM_SHARED_SECRET"], \
-                     username= credentials["username"], password_hash=credentials["password_hash"])
+def scrobble_to_lastfm(lastfm_network, artist, song):
     timestamp = int(time.time())
     lastfm_network.scrobble(artist, song, timestamp)
     print("Scrobble completed: {} - {}".format(artist, song))
