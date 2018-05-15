@@ -37,13 +37,13 @@ pylast.md5(password)
 
 ## How does it work
 - It works in the background and scrobbles every song written in the stream until you kill the script.
-- Grabs the youtube link and extracts the stream url.
+- To do that it takes youtube link as argument and extracts the stream url.
 - OpenCV opens the stream and captures one single frame every 30 seconds
 ![Example image](images/img.jpg "Example image")
 - Image gets cropped
 ![Example cropped image](images/img_cropped.jpg "Example cropped image")
 - Remove the background
 ![Example processed image](images/img_cropped_processed.jpg "Example processed image")
-- OCR on image
+- Tesseract-OCR reads the image
 - Send to Last.FM (if it didn't send it already)
 
