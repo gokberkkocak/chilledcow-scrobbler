@@ -5,6 +5,7 @@ LastFM scrobbler for chilledcow youtube stream
 - Tesseract-OCR
 
 ## Python Requirements
+- requests
 - opencv
 - pafy
 - youtube-dl
