@@ -3,6 +3,7 @@ import cv2
 import pafy
 import numpy as np
 import time
+import requests
 from PIL import Image
 import pytesseract
 import pylast
@@ -11,17 +12,19 @@ import sys
 import json
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python ccs.py <credentials_file_json> <chilledcow_youtube_video_link>")
+    if len(sys.argv) < 2:
+        print("Usage: python ccs.py <data_file_json>")
         sys.exit()
-    credentials_file = sys.argv[1]
-    with open(credentials_file, "r") as f:
-        credentials = json.load(f)
-    url = sys.argv[2]
+    data_file = sys.argv[1]
+    with open(data_file, "r") as f:
+        data = json.load(f)
+    url = get_live_video_url(data["Youtube_Data_API_Key"], data["chilledcow_youtube_channel_id"])
     stream = get_video_url(url)
     prev_song_details = ""
-    lastfm_network = pylast.LastFMNetwork(api_key=credentials["LASTFM_API_KEY"], api_secret=credentials["LASTFM_SHARED_SECRET"], \
-                     username=credentials["username"], password_hash=credentials["password_hash"])
+    lastfm_network = pylast.LastFMNetwork(api_key=data["LASTFM_API_KEY"], api_secret=data["LASTFM_SHARED_SECRET"], \
+                     username=data["username"], password_hash=data["password_hash"])
+    document = get_doc_file(data["song_list_google_doc_id"])
+    entries = get_entries_from_doc(document)
     while True:
         image_file = take_snapshot(stream)
         cropped_image_file = cut_image(image_file)
@@ -30,11 +33,35 @@ def main():
         diff_flag = diff_song_details(prev_song_details, song_details)
         if diff_flag:
             prev_song_details = song_details
-            artist, song = check_song_details(song_details)
+            matched_song_details = find_closest_match_from_entries(entries, song_details)
+            artist, song = check_song_details(matched_song_details)
             if artist is not None:
                 scrobble_to_lastfm(lastfm_network, artist, song)
         time.sleep(30)
-        
+
+def get_live_video_url(youtube_data_api_key, chilledcow_youtube_channel_id):
+    request_link = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={}&maxResults=5&key={}"
+    new_request_link = request_link.format(chilledcow_youtube_channel_id, youtube_data_api_key)
+    response = requests.get(new_request_link, allow_redirects=True)
+    response = response.json()
+    for item in response["items"]:
+        if item["snippet"]["liveBroadcastContent"] == "live":
+            return item["id"]["videoId"]
+            
+def get_doc_file(song_list_google_doc_id):
+    request_link = "https://docs.google.com/document/d/{}/export?format={}"
+    new_request_link = request_link.format(song_list_google_doc_id, "txt")
+    response = requests.get(new_request_link)
+    response = response.text
+    return response
+
+def get_entries_from_doc(document):
+    entries = []
+    for line in document.split("\n"):
+        if " - " in line:
+            entries.append(line.strip())
+    return entries
+
 def get_video_url(youtube_link):
     videoPafy = pafy.new(youtube_link)
     # print(videoPafy)
@@ -82,6 +109,18 @@ def tesseract_ocr_read(image):
     song_details = pytesseract.image_to_string(img)
     # print("Song details read by tesseract")
     return song_details
+
+def find_closest_match_from_entries(entries, song_details):
+    max_similarity_score = 0
+    matched_entry = ""
+    for entry in entries:
+        seq = difflib.SequenceMatcher(a=entry.lower(), b=song_details.lower())
+        similarity_score = seq.ratio()
+        if similarity_score > max_similarity_score:
+            max_similarity_score = similarity_score
+            matched_entry = entry
+    return matched_entry
+
 
 def diff_song_details(previous_song_details, song_details):
     seq = difflib.SequenceMatcher(a=previous_song_details.lower(), b=song_details.lower())
