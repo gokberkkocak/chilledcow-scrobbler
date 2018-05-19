@@ -143,7 +143,7 @@ def check_song_details(song_details):
 def scrobble_to_lastfm(lastfm_network, artist, song, confidence):
     timestamp = int(time.time())
     lastfm_network.scrobble(artist, song, timestamp)
-    print("Scrobled: {} - {} (w/ {}%% confidence)".format(artist, song, int(confidence*100)))
+    print("Scrobled: {} - {} ({}% confidence)".format(artist, song, int(confidence*100)))
 
 if __name__ == '__main__':
     main()
