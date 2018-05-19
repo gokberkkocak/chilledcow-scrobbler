@@ -30,13 +30,13 @@ def main():
         cropped_image_file = cut_image(image_file)
         processed_image_file = cv2_process(cropped_image_file)
         song_details = tesseract_ocr_read(processed_image_file)
-        diff_flag = diff_song_details(prev_song_details, song_details)
+        matched_song_details, confidence = find_closest_match_from_entries(entries, song_details)
+        diff_flag = diff_song_details(prev_song_details, matched_song_details)
         if diff_flag:
-            prev_song_details = song_details
-            matched_song_details = find_closest_match_from_entries(entries, song_details)
+            prev_song_details = matched_song_details
             artist, song = check_song_details(matched_song_details)
             if artist is not None:
-                scrobble_to_lastfm(lastfm_network, artist, song)
+                scrobble_to_lastfm(lastfm_network, artist, song, confidence)
         time.sleep(30)
 
 def get_live_video_url(youtube_data_api_key, chilledcow_youtube_channel_id):
@@ -119,7 +119,8 @@ def find_closest_match_from_entries(entries, song_details):
         if similarity_score > max_similarity_score:
             max_similarity_score = similarity_score
             matched_entry = entry
-    return matched_entry
+    # print(song_details, " | ", matched_entry,  " | ", max_similarity_score)
+    return matched_entry, max_similarity_score
 
 
 def diff_song_details(previous_song_details, song_details):
@@ -139,10 +140,10 @@ def check_song_details(song_details):
     else:
         return None, None
 
-def scrobble_to_lastfm(lastfm_network, artist, song):
+def scrobble_to_lastfm(lastfm_network, artist, song, confidence):
     timestamp = int(time.time())
     lastfm_network.scrobble(artist, song, timestamp)
-    print("Scrobble completed: {} - {}".format(artist, song))
+    print("Scrobled: {} - {} (w/ {}%% confidence)".format(artist, song, int(confidence*100)))
 
 if __name__ == '__main__':
     main()
