@@ -40,7 +40,7 @@ def main():
         time.sleep(30)
 
 def get_live_video_url(youtube_data_api_key, chilledcow_youtube_channel_id):
-    request_link = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={}&maxResults=5&key={}"
+    request_link = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={}&maxResults=50&key={}"
     new_request_link = request_link.format(chilledcow_youtube_channel_id, youtube_data_api_key)
     response = requests.get(new_request_link, allow_redirects=True)
     response = response.json()
