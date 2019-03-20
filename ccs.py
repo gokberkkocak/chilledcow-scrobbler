@@ -45,7 +45,7 @@ def get_live_video_url(youtube_data_api_key, chilledcow_youtube_channel_id):
     response = requests.get(new_request_link, allow_redirects=True)
     response = response.json()
     for item in response["items"]:
-        if item["snippet"]["liveBroadcastContent"] == "live":
+        if item["snippet"]["liveBroadcastContent"] == "live" and "radio" in item["snippet"]["title"] and "relax/study" in item["snippet"]["title"]:
             return item["id"]["videoId"]
             
 def get_doc_file(song_list_google_doc_id):
