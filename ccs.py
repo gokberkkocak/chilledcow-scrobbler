@@ -63,7 +63,8 @@ def get_entries_from_doc(document):
     return entries
 
 def get_video_url(youtube_link):
-    videoPafy = pafy.new(youtube_link)
+    new_youtube_link = "https://www.youtube.com/watch?v=" + youtube_link
+    videoPafy = pafy.new(new_youtube_link)
     # print(videoPafy)
     best = videoPafy.getbest()
     # print(best)
