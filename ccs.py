@@ -86,7 +86,8 @@ def take_snapshot(stream):
 def cut_image(image):
     img = Image.open(image)
     width = img.size[0]
-    area = (0, 0, width, 50)
+    height = img.size[1]
+    area = (0, 0, width, height/10)
     cropped_img = img.crop(area)
     new_image = image.split(".")[0]+"_cropped.jpg"
     cropped_img.save(new_image)
